@@ -42,8 +42,8 @@ namespace sqlite_fluent_extension
             if (OldId.HasValue)
             {
                 Jobs.Clear();
-                (await myDatabase.Table<Job>()
-                    .Where(_ => _.EmployeeId == OldId)
+                (await 
+                    myDatabase.Table<Job>()
                     .ClearEmployee(OldId.Value))
                     .ForEach(_ => Jobs.Add(_));
             }
@@ -62,7 +62,7 @@ namespace sqlite_fluent_extension
     {
         public static async Task<List<Job>> ClearEmployee(this AsyncTableQuery<Job> query, int oldId)
         {
-            var jobs = await query.ToListAsync();
+            var jobs = await query.Where(_=>_.EmployeeId == oldId).ToListAsync();
             jobs.ForEach(_ => _.EmployeeId = 0);
             // Visible because of:
             // using static sqlite_fluent_extension.MainPage;
