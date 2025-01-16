@@ -34,6 +34,9 @@ namespace sqlite_fluent_extension
             buttonTest.IsEnabled = true;
         }
 
+        /// <summary>
+        /// Clear the id selected on the UI and display the modified records.
+        /// </summary>
         private async void OnTestFluentClicked(object sender, EventArgs e)
         {
             if (OldId.HasValue)
@@ -61,7 +64,9 @@ namespace sqlite_fluent_extension
         {
             var jobs = await query.ToListAsync();
             jobs.ForEach(_ => _.EmployeeId = 0);
-            await myDatabase.UpdateAllAsync(jobs);
+            // Visible because of:
+            // using static sqlite_fluent_extension.MainPage;
+            await myDatabase.UpdateAllAsync(jobs); 
             return jobs;
         }
     }
