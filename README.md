@@ -4,13 +4,13 @@ As an  alternative to my first answer, if you _do_ like the LINQ-like fluent syn
 /// <summary>
 /// Clear the id selected on the UI and display the modified records.
 /// </summary>
-private async void OnTestFluentClicked(object sender, EventArgs e)
+ private async void OnTestFluentClicked(object sender, EventArgs e)
 {
     if (OldId.HasValue)
     {
         Jobs.Clear();
-        (await myDatabase.Table<Job>()
-            .Where(_ => _.EmployeeId == OldId)
+        (await 
+            myDatabase.Table<Job>()
             .ClearEmployee(OldId.Value))
             .ForEach(_ => Jobs.Add(_));
     }
@@ -28,7 +28,7 @@ static partial class Extensions
 {
     public static async Task<List<Job>> ClearEmployee(this AsyncTableQuery<Job> query, int oldId)
     {
-        var jobs = await query.ToListAsync();
+        var jobs = await query.Where(_=>_.EmployeeId == oldId).ToListAsync();
         jobs.ForEach(_ => _.EmployeeId = 0);
         // Visible because of:
         // using static sqlite_fluent_extension.MainPage;
@@ -84,8 +84,8 @@ public partial class MainPage : ContentPage
         if (OldId.HasValue)
         {
             Jobs.Clear();
-            (await myDatabase.Table<Job>()
-                .Where(_ => _.EmployeeId == OldId)
+            (await 
+                myDatabase.Table<Job>()
                 .ClearEmployee(OldId.Value))
                 .ForEach(_ => Jobs.Add(_));
         }
@@ -104,7 +104,7 @@ static partial class Extensions
 {
     public static async Task<List<Job>> ClearEmployee(this AsyncTableQuery<Job> query, int oldId)
     {
-        var jobs = await query.ToListAsync();
+        var jobs = await query.Where(_=>_.EmployeeId == oldId).ToListAsync();
         jobs.ForEach(_ => _.EmployeeId = 0);
         // Visible because of:
         // using static sqlite_fluent_extension.MainPage;
